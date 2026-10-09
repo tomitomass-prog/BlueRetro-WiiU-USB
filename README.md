@@ -56,3 +56,14 @@ Gry GameCube uruchamiane jako Wii VC Inject moga uzywac Nintendont, jednak obslu
 - PlatformIO LOLIN32 Lite: https://docs.platformio.org/en/stable/boards/espressif32/lolin32_lite.html
 - PlatformIO LOLIN S2 Mini: https://docs.platformio.org/en/stable/boards/espressif32/lolin_s2_mini.html
 - Nintendont DualSense mapping: https://github.com/FIX94/Nintendont/blob/master/controllerconfigs/controller_ps5.ini
+
+## GitHub Actions (CI)
+
+Workflow: `.github/workflows/build.yml`.
+
+- Uruchamia sie po `push` na `main` / `master`, przy pull requestach oraz recznie w zakladce **Actions** -> **Build ESP32-S2 firmware** -> **Run workflow**.
+- Weryfikuje protokol UART (`python tools/test_packets.py`).
+- Kompiluje firmware ESP32-S2 Mini w PlatformIO (`python -m platformio run -d usb-s2 -e lolin_s2_mini`).
+- Po udanym buildzie udostepnia pliki `firmware.bin`, `bootloader.bin` i `partitions.bin` jako artefakt `lolin-s2-mini-firmware`.
+
+**Ograniczenia:** folder `bluetooth-esp32` zawiera tylko fragment integracyjny Bluepad32, a nie kompletne samodzielne srodowisko PlatformIO. CI **nie kompiluje jeszcze firmware LOLIN32 Lite**. Workflow wymaga pobrania narzedzi i pakietow z internetu podczas uruchomienia w GitHub Actions. Samo przejscie kompilacji nie dowodzi zgodnosci USB HID z Nintendont.
